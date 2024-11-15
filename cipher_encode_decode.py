@@ -2,60 +2,46 @@
 
 import streamlit as st
 
-# Türkçe karakterlerle uyumlu Sezar Şifreleme fonksiyonu
+# Türkçe alfabeye göre küçük ve büyük harf eşlemeleri
+alphabet_lower = "abcçdefgğhıijklmnoöprsştuüvyz"
+alphabet_upper = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ"
+
+# Şifreleme fonksiyonu
 def caesar_cipher_encode(plaintext, key):
-    # Türkçe alfabesi (küçük harflerle)
-    alphabet = "abcçdefgğhıijklmnoöprsştuüvyz"
-    alphabet_hash = {char: index for index, char in enumerate(alphabet)}
-    reverse_alphabet_hash = {index: char for char, index in alphabet_hash.items()}
     ciphertext = []
     
     for char in plaintext:
-        if char.lower() in alphabet_hash:  # Eğer karakter Türkçe alfabesinde varsa
-            # Şifrelenmiş konumu hesapla
-            new_position = (alphabet_hash[char.lower()] + key) % len(alphabet)
-            encoded_char = reverse_alphabet_hash[new_position]
-            # Büyük harf kontrolü ve Türkçe karakterlerin uyumlu dönüşümü
-            if char.isupper():
-                # Türkçe karakterlerin büyük harf uyumu sağlanıyor
-                if encoded_char == 'i':
-                    encoded_char = 'İ'
-                elif encoded_char == 'ı':
-                    encoded_char = 'I'
-                else:
-                    encoded_char = encoded_char.upper()
-            ciphertext.append(encoded_char)
+        if char in alphabet_lower:
+            # Küçük harflerde şifreleme
+            new_position = (alphabet_lower.index(char) + key) % len(alphabet_lower)
+            ciphertext.append(alphabet_lower[new_position])
+        elif char in alphabet_upper:
+            # Büyük harflerde şifreleme
+            new_position = (alphabet_upper.index(char) + key) % len(alphabet_upper)
+            ciphertext.append(alphabet_upper[new_position])
         else:
-            # Alfabe dışında bir karakter ise olduğu gibi ekle
+            # Harf dışında karakter ise olduğu gibi ekle
             ciphertext.append(char)
+    
     return ''.join(ciphertext)
 
-# Türkçe karakterlerle uyumlu Sezar Çözme fonksiyonu
+# Çözme fonksiyonu
 def caesar_cipher_decode(ciphertext, key):
-    # Türkçe alfabesi (küçük harflerle)
-    alphabet = "abcçdefgğhıijklmnoöprsştuüvyz"
-    alphabet_hash = {char: index for index, char in enumerate(alphabet)}
-    reverse_alphabet_hash = {index: char for char, index in alphabet_hash.items()}
     plaintext = []
     
     for char in ciphertext:
-        if char.lower() in alphabet_hash:  # Eğer karakter Türkçe alfabesinde varsa
-            # Orijinal konumu hesapla
-            original_position = (alphabet_hash[char.lower()] - key) % len(alphabet)
-            decoded_char = reverse_alphabet_hash[original_position]
-            # Büyük harf kontrolü ve Türkçe karakterlerin uyumlu dönüşümü
-            if char.isupper():
-                # Türkçe karakterlerin büyük harf uyumu sağlanıyor
-                if decoded_char == 'i':
-                    decoded_char = 'İ'
-                elif decoded_char == 'ı':
-                    decoded_char = 'I'
-                else:
-                    decoded_char = decoded_char.upper()
-            plaintext.append(decoded_char)
+        if char in alphabet_lower:
+            # Küçük harflerde çözme
+            original_position = (alphabet_lower.index(char) - key) % len(alphabet_lower)
+            plaintext.append(alphabet_lower[original_position])
+        elif char in alphabet_upper:
+            # Büyük harflerde çözme
+            original_position = (alphabet_upper.index(char) - key) % len(alphabet_upper)
+            plaintext.append(alphabet_upper[original_position])
         else:
-            # Alfabe dışında bir karakter ise olduğu gibi ekle
+            # Harf dışında karakter ise olduğu gibi ekle
             plaintext.append(char)
+    
     return ''.join(plaintext)
 
 # Streamlit uygulaması
@@ -91,4 +77,6 @@ with tab2:
 
 # Alt bilgi
 st.write("---")
-st.caption("Sezar Şifreleme ve Çözme Aracı - Güvenli ve Eğlenceli!")
+st.caption("Sezar Şifreleme ve Çözme Aracı - Güvenli ve Eğlenceli! ")
+
+st.caption("📝 Unutmayın ki, Sezar'ın hakkı Sezar'a! 😆")
