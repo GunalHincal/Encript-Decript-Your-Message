@@ -2,29 +2,59 @@
 
 import streamlit as st
 
-# Şifreleme fonksiyonu
+# Türkçe karakterlerle uyumlu Sezar Şifreleme fonksiyonu
 def caesar_cipher_encode(plaintext, key):
-    alphabet_hash = {char: index for index, char in enumerate("abcçdefgğhıijklmnoöprsştuüvyz")}
+    # Türkçe alfabesi (küçük harflerle)
+    alphabet = "abcçdefgğhıijklmnoöprsştuüvyz"
+    alphabet_hash = {char: index for index, char in enumerate(alphabet)}
     reverse_alphabet_hash = {index: char for char, index in alphabet_hash.items()}
     ciphertext = []
+    
     for char in plaintext:
-        if char.lower() in alphabet_hash:
-            new_position = (alphabet_hash[char.lower()] + key) % len(alphabet_hash)
-            ciphertext.append(reverse_alphabet_hash[new_position].upper())
+        if char.lower() in alphabet_hash:  # Eğer karakter Türkçe alfabesinde varsa
+            # Şifrelenmiş konumu hesapla
+            new_position = (alphabet_hash[char.lower()] + key) % len(alphabet)
+            encoded_char = reverse_alphabet_hash[new_position]
+            # Büyük harf kontrolü ve Türkçe karakterlerin uyumlu dönüşümü
+            if char.isupper():
+                # Türkçe karakterlerin büyük harf uyumu sağlanıyor
+                if encoded_char == 'i':
+                    encoded_char = 'İ'
+                elif encoded_char == 'ı':
+                    encoded_char = 'I'
+                else:
+                    encoded_char = encoded_char.upper()
+            ciphertext.append(encoded_char)
         else:
+            # Alfabe dışında bir karakter ise olduğu gibi ekle
             ciphertext.append(char)
     return ''.join(ciphertext)
 
-# Çözme fonksiyonu
+# Türkçe karakterlerle uyumlu Sezar Çözme fonksiyonu
 def caesar_cipher_decode(ciphertext, key):
-    alphabet_hash = {char: index for index, char in enumerate("abcçdefgğhıijklmnoöprsştuüvyz")}
+    # Türkçe alfabesi (küçük harflerle)
+    alphabet = "abcçdefgğhıijklmnoöprsştuüvyz"
+    alphabet_hash = {char: index for index, char in enumerate(alphabet)}
     reverse_alphabet_hash = {index: char for char, index in alphabet_hash.items()}
     plaintext = []
+    
     for char in ciphertext:
-        if char.lower() in alphabet_hash:
-            original_position = (alphabet_hash[char.lower()] - key) % len(alphabet_hash)
-            plaintext.append(reverse_alphabet_hash[original_position].upper())
+        if char.lower() in alphabet_hash:  # Eğer karakter Türkçe alfabesinde varsa
+            # Orijinal konumu hesapla
+            original_position = (alphabet_hash[char.lower()] - key) % len(alphabet)
+            decoded_char = reverse_alphabet_hash[original_position]
+            # Büyük harf kontrolü ve Türkçe karakterlerin uyumlu dönüşümü
+            if char.isupper():
+                # Türkçe karakterlerin büyük harf uyumu sağlanıyor
+                if decoded_char == 'i':
+                    decoded_char = 'İ'
+                elif decoded_char == 'ı':
+                    decoded_char = 'I'
+                else:
+                    decoded_char = decoded_char.upper()
+            plaintext.append(decoded_char)
         else:
+            # Alfabe dışında bir karakter ise olduğu gibi ekle
             plaintext.append(char)
     return ''.join(plaintext)
 
